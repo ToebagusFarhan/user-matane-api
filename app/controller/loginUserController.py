@@ -57,9 +57,13 @@ def login():
 
             # Return success with user details (excluding sensitive data like password)
             return jsonify(status="success", message="Login successful", data={
-                "userId": user.uuid,
+                "profilelink": user.userprofile_link,
+                "useruuid": user.uuid,
                 "username": user.username,
-                "email": user.email
+                "email": user.email,
+                "age": user.age,
+                "gender": user.gender,
+                "address": user.address
             }), 200
 
     except SQLAlchemyError as e:
