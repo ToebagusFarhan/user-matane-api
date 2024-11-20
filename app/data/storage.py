@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 bucket_name = os.environ.get("BUCKET_NAME")
+service_account = os.environ.get("SERVICE_ACCOUNT")
 
 def get_bucket(bucket_name):
     client = storage.Client()
@@ -22,6 +23,6 @@ def generate_presigned_url_for_profile(blob_name, expiration=3600):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(f"userProfile/{blob_name}")
-    url = blob.generate_signed_url(expiration=datetime.timedelta(seconds=expiration), method='GET')
+    url = blob.generate_signed_url(version="v4", expiration=datetime.timedelta(seconds=expiration), method='GET', service_account_email=service_account)
     return url
 
