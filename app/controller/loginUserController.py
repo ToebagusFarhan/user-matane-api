@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from data.db import get_db
 from data.models import User
+from utils.apiauth import amIAllowed
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 import bcrypt
@@ -31,6 +32,11 @@ def login():
     Raises:
         SQLAlchemyError: If there is an error querying the database.
     """
+    
+    # Check if the user is allowed to login
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized access"), 403
+    
     data = request.get_json()
     
     # Extract the email and hashed password from the request

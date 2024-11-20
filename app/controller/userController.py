@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from data.db import get_db
 from data.models import User
+from utils.apiauth import amIAllowed
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from contextlib import contextmanager
@@ -15,12 +16,18 @@ def get_session():
         db.close()
 
 def get_all_users():
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized"), 403
+
     with get_session() as db:
         users = db.query(User).all()
         response_users = [{"uuid": user.uuid, "name": user.username, "email": user.email} for user in users]
         return jsonify(status="success", data={"users": response_users}), 200
 
 def get_user_by_uuid(user_uuid):
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized"), 403
+
     with get_session() as db:
         user = db.query(User).filter(User.uuid == user_uuid).first()
         if user:
@@ -28,6 +35,9 @@ def get_user_by_uuid(user_uuid):
         return jsonify(status="fail", message="User not found"), 404
 
 def add_personal_data_by_uuid(user_uuid):
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized"), 403
+
     with get_session() as db:
         data = request.get_json()
         user = db.query(User).filter(User.uuid == user_uuid).first()
@@ -46,7 +56,22 @@ def add_personal_data_by_uuid(user_uuid):
 
         return jsonify(status="success", message="User personal data updated successfully", data={"userId": user.uuid, "user age": user.age, "user gender": user.gender, "user address": user.address}), 200
 
+def update_profile_by_uuid(user_uuid):
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized"), 403
+    with get_session() as db:
+        data = request.get_json()
+        user = db.query(User).filter(User.uuid == user_uuid).first()
+
+        if not user:
+            return jsonify(status="fail", message="User not found"), 404
+
+        
+
 def update_user_by_uuid(user_uuid):
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized"), 403
+
     with get_session() as db:
         data = request.get_json()
         user = db.query(User).filter(User.uuid == user_uuid).first()
@@ -67,6 +92,9 @@ def update_user_by_uuid(user_uuid):
         return jsonify(status="success", message="User updated successfully", data={"userId": user.uuid, "name": user.username}), 200
 
 def delete_user_by_uuid(user_uuid):
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized"), 403
+
     with get_session() as db:
         user = db.query(User).filter(User.uuid == user_uuid).first()
 
@@ -83,6 +111,9 @@ def delete_user_by_uuid(user_uuid):
         return jsonify(status="success", message="User deleted successfully"), 200
 
 def delete_user_all():
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized"), 403
+
     data = request.get_json()
     if data.get("secret_key") != "iwakpeyek":
         return jsonify(status="fail", message="User deletion failed. You Don't have access"), 403

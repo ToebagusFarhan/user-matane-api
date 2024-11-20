@@ -1,0 +1,30 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'asia-southeast2-docker.pkg.dev/capstone-matane/artifact-repo/devtest', '.']
+
+  # Step 2: Push the image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia-southeast2-docker.pkg.dev/capstone-matane/artifact-repo/devtest']
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'DevTest'
+      - '--image'
+      - 'asia-southeast2-docker.pkg.dev/capstone-matane/artifact-repo/devtest'
+      - '--region'
+      - 'asia-southeast2'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-env-vars'
+      - 'DB_SECRET=projects/capstone-matane/secrets/db-connection-string'
+
+# Optional: Artifacts to retain in the build logs
+artifacts:
+  images:
+    - 'asia-southeast2-docker.pkg.dev/capstone-matane/artifact-repo/devtest'

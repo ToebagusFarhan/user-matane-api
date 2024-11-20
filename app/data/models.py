@@ -1,7 +1,6 @@
 #models.py
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session
 from datetime import datetime
 import pytz
 
@@ -10,7 +9,10 @@ tm = pytz.timezone('Asia/Jakarta')
 Base = declarative_base()
 
 class User(Base):
-    __tablename__ = 'usersTry'
+    # Dev Table
+    __tablename__ = 'userstest'
+    # Prod Table
+    # __tablename__ = 'users'
     
     id = Column(Integer, primary_key=True, index=True)
     uuid = Column(String(36), unique=True, nullable=False)
@@ -20,7 +22,6 @@ class User(Base):
     password_hash = Column(String(128), nullable=False)
     created_at = Column(DateTime, default=datetime.now(tm))
     updated_at = Column(DateTime, default=datetime.now(tm), onupdate=datetime.now(tm))
-
     # this data is nullable
     age = Column(Integer, nullable=True)
     gender = Column(String(21), nullable=True)

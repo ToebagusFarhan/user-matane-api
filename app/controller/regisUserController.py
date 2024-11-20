@@ -3,6 +3,7 @@ from flask import request, jsonify
 from uuid import uuid4
 from data.db import get_db
 from data.models import User
+from utils.apiauth import amIAllowed
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 import bcrypt
@@ -28,6 +29,9 @@ def regis():
         - On success: Returns a JSON response with status "success", a message, and the new user's ID and username.
         - On failure: Returns a JSON response with status "fail" and an appropriate error message, along with an HTTP status code.
     """
+    if not amIAllowed():
+        return jsonify(status="fail", message="Unauthorized access"), 403
+    
     data = request.get_json()
     uuid = str(uuid4())
     # Hash the client-provided password hash using bcrypt
