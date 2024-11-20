@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import pytz
+import os
 
 tm = pytz.timezone('Asia/Jakarta')
 
@@ -10,7 +11,7 @@ Base = declarative_base()
 
 class User(Base):
     # Dev Table
-    __tablename__ = 'userstest'
+    __tablename__ = os.environ.get('DB_TABLE')
     # Prod Table
     # __tablename__ = 'users'
     
