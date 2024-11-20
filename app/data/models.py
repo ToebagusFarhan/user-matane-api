@@ -4,6 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import pytz
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 tm = pytz.timezone('Asia/Jakarta')
 
