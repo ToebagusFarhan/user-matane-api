@@ -4,7 +4,6 @@ import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
 bucket_name = os.environ.get("BUCKET_NAME")
 
 def get_bucket(bucket_name):
