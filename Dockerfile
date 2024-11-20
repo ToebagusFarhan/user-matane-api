@@ -13,7 +13,7 @@ WORKDIR /app
 COPY app/requirements.txt .
 
 # Install runtime dependencies
-RUN pip install --no-cache-dir -r app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
