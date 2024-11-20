@@ -1,9 +1,9 @@
 # regisUser.py
 from flask import request, jsonify
 from uuid import uuid4
-from data.db import get_db
-from data.models import User
-from utils.apiauth import amIAllowed
+from app.data.db import get_db
+from app.data.models import User
+from app.utils.apiauth import amIAllowed
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 import bcrypt
