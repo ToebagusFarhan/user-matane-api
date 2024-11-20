@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 # Copy only requirements.txt to leverage Docker caching
-COPY requirements.txt .
+COPY app/requirements.txt .
 
 # Install runtime dependencies
 RUN pip install --no-cache-dir -r requirements.txt
