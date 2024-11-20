@@ -12,14 +12,14 @@ def get_bucket(bucket_name):
     bucket = client.get_bucket(bucket_name)
     return bucket
 
-def upload_blob_to_folder(bucket_name, source_file_name, destination_folder_name, destination_blob_name):
+def upload_blob_to_folder(source_file_name, destination_folder_name, destination_blob_name):
     bucket = get_bucket(bucket_name)
     blob = bucket.blob(f"{destination_folder_name}/{destination_blob_name}")
     blob.upload_from_filename(source_file_name)
     print(f"File {source_file_name} uploaded to {destination_folder_name}/{destination_blob_name}.")
     
 
-def generate_presigned_url_for_profile(bucket_name, blob_name, expiration=3600):
+def generate_presigned_url_for_profile(blob_name, expiration=3600):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(f"userProfile/{blob_name}")

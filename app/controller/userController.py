@@ -1,10 +1,14 @@
 from flask import request, jsonify
 from app.data.db import get_db
+from app.data.storage import upload_blob_to_folder, generate_presigned_url_for_profile
 from app.data.models import User
 from app.utils.apiauth import amIAllowed
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from contextlib import contextmanager
+import tempfile
+import os
+
 
 # Context manager to get a database session
 @contextmanager
@@ -56,18 +60,49 @@ def add_personal_data_by_uuid(user_uuid):
 
         return jsonify(status="success", message="User personal data updated successfully", data={"userId": user.uuid, "user age": user.age, "user gender": user.gender, "user address": user.address}), 200
 
-def update_profile_by_uuid(user_uuid):
+def update_userProfile_by_uuid(user_uuid):
     if not amIAllowed():
         return jsonify(status="fail", message="Unauthorized"), 403
-    with get_session() as db:
-        data = request.get_json()
-        user = db.query(User).filter(User.uuid == user_uuid).first()
 
+    # Check if the user exists in the database
+    with get_session() as db:
+        user = db.query(User).filter(User.uuid == user_uuid).first()
         if not user:
             return jsonify(status="fail", message="User not found"), 404
 
-        
+    # Check if an image is provided in the request
+    if 'image' not in request.files:
+        return jsonify(status="fail", message="No image file found in request"), 400
 
+    image_file = request.files['image']
+    if image_file.filename == '':
+        return jsonify(status="fail", message="No file selected for upload"), 400
+
+    # Use user_uuid as the filename, preserving the file extension
+    file_extension = os.path.splitext(image_file.filename)[1]
+    filename = f"{user_uuid}{file_extension}"
+
+    try:
+        # Use tempfile to create a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=file_extension) as temp_file:
+            temp_path = temp_file.name
+            image_file.save(temp_path)
+
+        # Upload to Cloud Storage
+        destination_folder_name = "userProfile"
+        upload_blob_to_folder(temp_path, destination_folder_name, filename)
+
+        # Generate a presigned URL
+        presigned_url = generate_presigned_url_for_profile(filename)
+
+        # Clean up the temporary file
+        os.remove(temp_path)
+
+        return jsonify(status="success", message="Image uploaded successfully", url=presigned_url), 201
+    except Exception as e:
+        return jsonify(status="fail", message=f"An error occurred: {str(e)}"), 500
+    
+    
 def update_user_by_uuid(user_uuid):
     if not amIAllowed():
         return jsonify(status="fail", message="Unauthorized"), 403
