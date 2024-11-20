@@ -1,8 +1,8 @@
 # routes.py
 from flask import Blueprint
-from controller.userController import update_user_by_uuid, get_user_by_uuid, get_all_users, delete_user_by_uuid, delete_user_all, add_personal_data_by_uuid
-from controller.regisUserController import regis
-from controller.loginUserController import login
+from .controller.userController import update_user_by_uuid, get_user_by_uuid, get_all_users, delete_user_by_uuid, delete_user_all, add_personal_data_by_uuid
+from .controller.regisUserController import regis
+from .controller.loginUserController import login
 
 
 user_routes = Blueprint('user_routes', __name__)
