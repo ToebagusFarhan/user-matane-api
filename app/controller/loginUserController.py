@@ -63,7 +63,6 @@ def login():
 
             # Return success with user details (excluding sensitive data like password)
             return jsonify(status="success", message="Login successful", data={
-                "profilelink": user.userprofile_link,
                 "useruuid": user.uuid,
                 "username": user.username,
                 "email": user.email,
