@@ -1,24 +1,30 @@
+substitutions:
+  _REGION: "asia-southeast2"
+  _SERVICE_NAME: "Main-App"
+
 steps:
   # Step 1: Build the Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/devtest', '.']
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/$_SERVICE_NAME", "."]
 
-  # Step 2: Deploy the image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
+  # Step 2: Push the Docker image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/$_SERVICE_NAME"]
+
+  # Step 3: Deploy the image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "gcloud"
     args:
-      - 'run'
-      - 'deploy'
-      - 'DevTest'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/devtest'
-      - '--region'
-      - 'asia-southeast2'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
-    
+      - "run"
+      - "deploy"
+      - "$_SERVICE_NAME"
+      - "--image"
+      - "gcr.io/$PROJECT_ID/$_SERVICE_NAME"
+      - "--region"
+      - "$_REGION"
+      - "--platform"
+      - "managed"
+      - "--allow-unauthenticated"
 
-# Optional: Specify images in build artifacts for logging
 images:
-  - 'gcr.io/$PROJECT_ID/devtest'
+  - "gcr.io/$PROJECT_ID/$_SERVICE_NAME"
