@@ -35,7 +35,7 @@ def regis():
     data = request.get_json()
     uuid = str(uuid4())
     # Hash the client-provided password hash using bcrypt
-    password_hashed = bcrypt.hashpw(data.get("password_hash"), bcrypt.gensalt())
+    password_hashed = bcrypt.hashpw(data.get("password_hash").encode("utf-8"), bcrypt.gensalt())
     
     new_user = User(
         uuid=uuid,
