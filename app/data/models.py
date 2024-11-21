@@ -19,7 +19,6 @@ class User(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     uuid = Column(String(36), unique=True, nullable=False)
-    userprofile_link = Column(String(100), unique=True, nullable=False)
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(120), unique=True, nullable=False)
     password_hash = Column(String(128), nullable=False)
