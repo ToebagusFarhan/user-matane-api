@@ -24,8 +24,7 @@ def upload_blob_to_folder(source_file_name, destination_folder_name, destination
     
 
 def generate_presigned_url_for_profile(blob_name, expiration=3600):
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
+    bucket = get_bucket(bucket_name)
     blob = bucket.blob(f"userProfile/{blob_name}")
     url = blob.generate_signed_url(version="v4", expiration=datetime.timedelta(seconds=expiration), method='GET', service_account_email=service_account)
     return url
