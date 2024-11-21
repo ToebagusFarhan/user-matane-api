@@ -1,14 +1,18 @@
 import os
 from google.cloud import storage
+from google.auth import compute_engine
 import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
+
 bucket_name = os.environ.get("BUCKET_NAME")
 service_account = os.environ.get("SERVICE_ACCOUNT")
+credentials = compute_engine.Credentials()
+project_id = os.environ.get("PROJECT_ID")
 
 def get_bucket(bucket_name):
-    client = storage.Client()
+    client = storage.Client(credentials=credentials, project=project_id)
     bucket = client.get_bucket(bucket_name)
     return bucket
 
