@@ -7,12 +7,12 @@ from dotenv import load_dotenv
 load_dotenv()
 status = os.environ.get("Environment")
 
-if status == "local":
-    GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"))
-else:
+if status == "production":
     GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file(
         "SECRETS/SERVICE_ACCOUNT")
+else:
+    GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"))
 
 bucket_name = os.environ.get("BUCKET_NAME")
 service_account = os.environ.get("SERVICE_ACCOUNT")
