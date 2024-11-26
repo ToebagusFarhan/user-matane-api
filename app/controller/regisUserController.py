@@ -1,5 +1,5 @@
 # regisUser.py
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from uuid import uuid4
 from app.data.db import get_db
 from app.data.models import User
@@ -30,8 +30,7 @@ def regis():
         - On failure: Returns a JSON response with status "fail" and an appropriate error message, along with an HTTP status code.
     """
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized access"), 403
-    
+        return render_template("error/401.html"), 401
     data = request.get_json()
     uuid = str(uuid4())
     # Hash the client-provided password hash using bcrypt

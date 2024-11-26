@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from app.data.db import get_db
 from app.data.storage import upload_blob_to_folder, generate_presigned_url_for_profile
 from app.data.models import User
@@ -21,7 +21,7 @@ def get_session():
 
 def get_all_users():
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized"), 403
+        return render_template("error/401.html"), 401
 
     with get_session() as db:
         users = db.query(User).all()
@@ -30,7 +30,7 @@ def get_all_users():
 
 def get_user_by_uuid(user_uuid):
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized"), 403
+        return render_template("error/401.html"), 401
 
     with get_session() as db:
         user = db.query(User).filter(User.uuid == user_uuid).first()
@@ -40,7 +40,7 @@ def get_user_by_uuid(user_uuid):
 
 def add_personal_data_by_uuid(user_uuid):
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized"), 403
+        return render_template("error/401.html"), 401
 
     with get_session() as db:
         data = request.get_json()
@@ -62,7 +62,7 @@ def add_personal_data_by_uuid(user_uuid):
 
 def update_userProfile_by_uuid(user_uuid):
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized"), 403
+        return render_template("error/401.html"), 401
 
     # Check if the user exists in the database
     with get_session() as db:
@@ -105,7 +105,7 @@ def update_userProfile_by_uuid(user_uuid):
     
 def update_user_by_uuid(user_uuid):
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized"), 403
+        return render_template("error/401.html"), 401
 
     with get_session() as db:
         data = request.get_json()
@@ -128,7 +128,7 @@ def update_user_by_uuid(user_uuid):
 
 def delete_user_by_uuid(user_uuid):
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized"), 403
+        return render_template("error/401.html"), 401
 
     with get_session() as db:
         user = db.query(User).filter(User.uuid == user_uuid).first()
@@ -147,7 +147,7 @@ def delete_user_by_uuid(user_uuid):
 
 def delete_user_all():
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized"), 403
+        return render_template("error/401.html"), 401
 
     data = request.get_json()
     if data.get("secret_key") != "iwakpeyek":

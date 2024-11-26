@@ -5,10 +5,14 @@ from google.oauth2 import service_account
 
 from dotenv import load_dotenv
 load_dotenv()
+status = os.environ.get("Environment")
 
-GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "/SECRETS/SERVICE_ACCOUNT"
-)
+if status == "local":
+    GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"))
+else:
+    GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        "SECRETS/SERVICE_ACCOUNT")
 
 bucket_name = os.environ.get("BUCKET_NAME")
 service_account = os.environ.get("SERVICE_ACCOUNT")

@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from app.data.db import get_db
 from app.data.models import User
 from app.utils.apiauth import amIAllowed
@@ -35,7 +35,7 @@ def login():
     
     # Check if the user is allowed to login
     if not amIAllowed():
-        return jsonify(status="fail", message="Unauthorized access"), 403
+        return render_template("error/401.html"), 401
     
     data = request.get_json()
     
