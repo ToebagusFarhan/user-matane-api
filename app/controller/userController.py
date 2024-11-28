@@ -39,6 +39,19 @@ def get_user_by_uuid(user_uuid):
         return jsonify(status="fail", message="User not found"), 404
 
 def add_personal_data_by_uuid(user_uuid):
+    """
+    Add personal data to a user profile. this function will add personal data to a user profile by receiving user data from a JSON request, and storing the user information in the database. It also performs basic validation to ensure that the user_uuid is provided.
+    Args:
+        user_uuid (string): UUID of the user to add personal data to.
+
+    Returns:
+        Response : A JSON response indicating the success or failure of the user personal data addition process.
+        - On success: Returns a JSON response with status "success", a message, and the new user's ID and personal data.
+        - On failure: Returns a JSON response with status "fail" and an appropriate error message, along with an HTTP status code.
+        - 404: If the user with the provided user_uuid does not exist.
+        - 500: If there is a database error.
+        - 401: If the user is not allowed to access the endpoint.
+    """
     if not amIAllowed():
         return render_template("error/401.html"), 401
 
@@ -61,6 +74,20 @@ def add_personal_data_by_uuid(user_uuid):
         return jsonify(status="success", message="User personal data updated successfully", data={"userId": user.uuid, "user age": user.age, "user gender": user.gender, "user address": user.address}), 200
 
 def update_userProfile_by_uuid(user_uuid):
+    """
+    Update the user profile image. This function will update the user profile image by receiving an image file in the request and uploading it to Cloud Storage. It will then generate a presigned URL for the uploaded image and return it in the response.
+
+    Args:
+        user_uuid (string): UUID of the user to add personal data to.
+    Returns:
+        Response: A JSON response indicating the success or failure of the user profile image update process.
+        - On success: Returns a JSON response with status "success", a message, and the presigned URL of the uploaded image.
+        - On failure: Returns a JSON response with status "fail" and an appropriate error message, along with an HTTP status code.
+        - 400: If no image file is found in the request.
+        - 401: If the user is not allowed to access the endpoint.
+        - 404: If the user with the provided user_uuid does not exist.
+        - 500: If there is an error uploading the image or generating the presigned URL.
+    """
     if not amIAllowed():
         return render_template("error/401.html"), 401
 
@@ -104,6 +131,21 @@ def update_userProfile_by_uuid(user_uuid):
     
     
 def update_user_by_uuid(user_uuid):
+    """
+    Update user details. This function will update the user details by receiving user data from a JSON request and updating the user information in the database. It also performs basic validation to ensure that the user_uuid and name are provided.
+
+    Args:
+        user_uuid (string): UUID of the user to update.
+
+    Returns:
+        Response: A JSON response indicating the success or failure of the user update process.
+        - On success: Returns a JSON response with status "success", a message, and the updated user details.
+        - On failure: Returns a JSON response with status "fail" and an appropriate error message, along with an HTTP status code.
+        - 400: If the name is not provided in the request.
+        - 401: If the user is not allowed to access the endpoint.
+        - 404: If the user with the provided user_uuid does not exist.
+        - 500: If there is a database error.
+    """
     if not amIAllowed():
         return render_template("error/401.html"), 401
 
@@ -127,6 +169,19 @@ def update_user_by_uuid(user_uuid):
         return jsonify(status="success", message="User updated successfully", data={"userId": user.uuid, "name": user.username}), 200
 
 def delete_user_by_uuid(user_uuid):
+    """
+    Delete a user. This function will delete a user from the database based on the provided user_uuid.
+    Args:
+        user_uuid (string): UUID of the user to delete.
+
+    Returns:
+        Response: A JSON response indicating the success or failure of the user deletion process.
+        - On success: Returns a JSON response with status "success" and a message indicating the user was deleted successfully.
+        - On failure: Returns a JSON response with status "fail" and an appropriate error message, along with an HTTP status code.
+        - 401: If the user is not allowed to access the endpoint.
+        - 404: If the user with the provided user_uuid does not exist.
+        - 500: If there is a database error.
+    """
     if not amIAllowed():
         return render_template("error/401.html"), 401
 
