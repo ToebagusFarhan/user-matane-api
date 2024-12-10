@@ -22,9 +22,9 @@ user_routes.route('/user/<string:user_uuid>', methods=['DELETE'])(delete_user_by
 user_routes.route('/user/profile/<string:user_uuid>', methods=['POST'])(update_userProfile_by_uuid)
 
 # Register user
-user_routes.route('/regis', methods=['POST'])(regis)
+user_routes.route('/regis', methods=['POST','GET'])(regis)
 # Login user
-user_routes.route('/login', methods=['POST'])(login)
+user_routes.route('/login', methods=['POST', 'GET'])(login)
 # Delete all users(Admin Only)
 user_routes.route('/admin/users/delete', methods=['DELETE'])(delete_user_all)
 
