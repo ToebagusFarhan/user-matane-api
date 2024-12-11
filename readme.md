@@ -29,6 +29,12 @@ Ensure the following dependencies are installed (available in `requirements.txt`
 ## Environment Variables
 Kindly check the .env-example
 
+## How to use this?
+- Git clone this repository.
+- pip install -r requirements.txt (You could use venv if you want).
+- copy the .env-example, change it to .env and fill the the one that are empty.
+- this repository use cloud services, if you want to use all localy please explore the code and change it acordingly.
+- flask run server.py.
 ## Routes and Functionality
 ### Database Session Management
 #### `get_session()`
