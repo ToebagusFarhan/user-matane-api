@@ -129,7 +129,38 @@ def update_userProfile_by_uuid(user_uuid):
     except Exception as e:
         return jsonify(status="fail", message=f"An error occurred: {str(e)}"), 500
     
-    
+def get_user_image_by_uuid(user_uuid):
+    """
+    Get the user profile image URL. This function will retrieve the presigned URL for the user's profile image based on the provided user_uuid.
+
+    Args:
+        user_uuid (string): UUID of the user to get the profile image for.
+
+    Returns:
+        Response: A JSON response indicating the success or failure of the image retrieval process.
+        - On success: Returns a JSON response with status "success", a message, and the presigned URL of the user's profile image.
+        - On failure: Returns a JSON response with status "fail" and an appropriate error message, along with an HTTP status code.
+        - 401: If the user is not allowed to access the endpoint.
+        - 404: If the user with the provided user_uuid does not exist.
+        - 500: If there is an error generating the presigned URL.
+    """
+    if not amIAllowed():
+        return render_template("error/401.html"), 401
+
+    with get_session() as db:
+        user = db.query(User).filter(User.uuid == user_uuid).first()
+        if not user:
+            return jsonify(status="fail", message="User not found"), 404
+
+    try:
+        # Assuming the filename is stored as user_uuid with an appropriate extension
+        file_extension = ".jpg"  # Replace with the actual extension if known
+        filename = f"{user_uuid}{file_extension}"
+        presigned_url = generate_presigned_url_for_profile(filename)
+        return jsonify(status="success", message="Image URL retrieved successfully", url=presigned_url), 200
+    except Exception as e:
+        return jsonify(status="fail", message=f"An error occurred: {str(e)}"), 500
+
 def update_user_by_uuid(user_uuid):
     """
     Update user details. This function will update the user details by receiving user data from a JSON request and updating the user information in the database. It also performs basic validation to ensure that the user_uuid and name are provided.
